@@ -38,7 +38,8 @@ class HomeScreen extends StatelessWidget {
                       child: Center(
                         child: ListTile(
                           leading: IconButton(
-                              onPressed: () {}, icon: Icon(Icons.check_box)),
+                              onPressed: () {},
+                              icon: const Icon(Icons.check_box)),
                           title: const Text('titles'),
                           trailing: Container(
                             height: 38,
@@ -58,6 +59,36 @@ class HomeScreen extends StatelessWidget {
                     );
                   },
                   itemCount: 10),
+            ),
+            Container(
+              padding: const EdgeInsets.all(8),
+              color: kwhite,
+              child: Row(
+                children: [
+                  const Expanded(
+                    child: TextField(
+                      decoration: InputDecoration(
+                          hintText: 'Add a new todo item',
+                          focusedBorder: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          prefixIcon: Icon(Icons.checklist_sharp)),
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.circular(8)),
+                    child: IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.add,
+                        color: kwhite,
+                        size: 30,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             )
           ],
         ),
