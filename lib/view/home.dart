@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo/constent/colors.dart';
+import 'package:todo/controller/const/colors.dart';
 import 'package:todo/view/widgets/app_bar.dart';
 
 class HomeScreen extends StatelessWidget {
