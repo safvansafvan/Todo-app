@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo/controller/const/colors.dart';
+import 'package:todo/view/widgets/add_todo.dart';
 import 'package:todo/view/widgets/app_bar.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -51,40 +52,7 @@ class HomeScreen extends StatelessWidget {
                 },
                 itemCount: 10),
           ),
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [Colors.white.withAlpha(100), Colors.grey])),
-            child: Row(
-              children: [
-                const Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                        hintText: 'Add a new todo item',
-                        focusedBorder: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        prefixIcon: Icon(Icons.checklist_sharp)),
-                  ),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.green,
-                      borderRadius: BorderRadius.circular(8)),
-                  child: IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.add,
-                      color: kwhite,
-                      size: 30,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )
+          AddTodoWidget()
         ],
       ),
     );

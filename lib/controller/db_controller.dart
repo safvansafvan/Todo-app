@@ -4,7 +4,8 @@ class DbController {
   static Future<void> createTable(sql.Database database) async {
     await database.execute("""CREATE TABLE items (
   id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  title TEXT
+  title TEXT,
+  createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) """);
   }
 
