@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:todo/controller/const/colors.dart';
+import 'package:todo/controller/provider/db_controller.dart';
 import 'package:todo/view/widgets/add_todo.dart';
 import 'package:todo/view/widgets/app_bar.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     ScrollController? scrollController;
@@ -16,41 +23,50 @@ class HomeScreen extends StatelessWidget {
         children: [
           const AppBarHome(),
           Expanded(
-            child: ListView.builder(
-                controller: scrollController,
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return Container(
-                    height: 60,
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: 15, vertical: 10),
-                    decoration: BoxDecoration(
-                        color: kwhite, borderRadius: BorderRadius.circular(15)),
-                    child: Center(
-                      child: ListTile(
-                        leading: IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.check_box)),
-                        title: const Text('titles'),
-                        trailing: Container(
-                          height: 38,
-                          width: 39,
-                          decoration: BoxDecoration(
-                              color: kred,
-                              borderRadius: BorderRadius.circular(8)),
-                          child: IconButton(
-                              onPressed: () {},
-                              icon: const Icon(
-                                Icons.delete,
+            child: Consumer<DbController>(builder: (context, provider, _) {
+              return FutureBuilder(
+                  future: provider.getItems(),
+                  builder: (context, snap) {
+                    return ListView.builder(
+                        controller: scrollController,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          final listValue = provider.todoList[index];
+                          return Container(
+                            height: 70,
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 5),
+                            decoration: BoxDecoration(
                                 color: kwhite,
-                              )),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-                itemCount: 10),
+                                borderRadius: BorderRadius.circular(15)),
+                            child: Center(
+                              child: ListTile(
+                                leading: IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(Icons.check_box)),
+                                title: Text(listValue['title']),
+                                subtitle: Text(listValue['createdAt']),
+                                trailing: Container(
+                                  height: 38,
+                                  width: 39,
+                                  decoration: BoxDecoration(
+                                      color: kred,
+                                      borderRadius: BorderRadius.circular(8)),
+                                  child: IconButton(
+                                      onPressed: () {},
+                                      icon: const Icon(
+                                        Icons.delete,
+                                        color: kwhite,
+                                      )),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                        itemCount: provider.todoList.length);
+                  });
+            }),
           ),
           AddTodoWidget()
         ],

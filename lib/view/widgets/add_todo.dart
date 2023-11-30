@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:todo/controller/const/colors.dart';
+import 'package:todo/controller/provider/db_controller.dart';
 import 'package:todo/view/widgets/toast_msg.dart';
 
 class AddTodoWidget extends StatelessWidget {
@@ -31,7 +33,7 @@ class AddTodoWidget extends StatelessWidget {
                 color: Colors.green, borderRadius: BorderRadius.circular(8)),
             child: IconButton(
               onPressed: () async {
-                await handleAddTodo();
+                await handleAddTodo(context);
               },
               icon: const Icon(Icons.add, color: kwhite, size: 30),
             ),
@@ -41,9 +43,14 @@ class AddTodoWidget extends StatelessWidget {
     );
   }
 
-  Future<void> handleAddTodo() async {
+  Future<void> handleAddTodo(context) async {
+    final provider = Provider.of<DbController>(context, listen: false);
     if (addController.text.isEmpty) {
       return showToastMsg('ToDo Is Empty');
-    } else {}
+    } else {
+      await provider.addItems(addController.text, DateTime.now().toString());
+      showToastMsg('ToDo Added');
+      addController.clear();
+    }
   }
 }
