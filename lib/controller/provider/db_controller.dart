@@ -29,8 +29,10 @@ class DbController extends ChangeNotifier {
       'id': DateTime.now().millisecondsSinceEpoch,
       'createdAt': date
     };
-    db.insert('items', data, conflictAlgorithm: sql.ConflictAlgorithm.replace);
+    final id = db.insert('items', data,
+        conflictAlgorithm: sql.ConflictAlgorithm.replace);
     notifyListeners();
+    return id;
   }
 
   Future<void> getItems() async {
@@ -39,5 +41,9 @@ class DbController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> deleteValues() async {}
+  Future<void> deleteValues(int id) async {
+    final db = await DbController().db();
+    await db.delete('items', where: 'id = ?', whereArgs: [id]);
+    notifyListeners();
+  }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:todo/controller/const/colors.dart';
 import 'package:todo/controller/provider/db_controller.dart';
@@ -25,58 +26,66 @@ class _HomeScreenState extends State<HomeScreen> {
           const AppBarHome(),
           Expanded(
             child: Consumer<DbController>(builder: (context, provider, _) {
-              return FutureBuilder(
-                  future: provider.getItems(),
-                  builder: (context, snap) {
-                    return ListView.builder(
-                        controller: scrollController,
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          final listValue = provider.todoList[index];
-                          DateTime date =
-                              DateTime.parse(listValue['createdAt']);
-                          String formatedDate =
-                              DateFormat().add_yMd().format(date);
-                          return Container(
-                            height: 70,
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 5),
-                            decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      Colors.white.withAlpha(100),
-                                      Colors.grey
-                                    ]),
-                                borderRadius: BorderRadius.circular(15)),
-                            child: Center(
-                              child: ListTile(
-                                leading: IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(Icons.check_box)),
-                                title: Text(listValue['title']),
-                                subtitle: Text(formatedDate),
-                                trailing: Container(
-                                  height: 38,
-                                  width: 39,
-                                  decoration: BoxDecoration(
-                                      color: kred,
-                                      borderRadius: BorderRadius.circular(8)),
-                                  child: IconButton(
+              if (provider.todoList.isEmpty) {
+                return Center(
+                    child: Lottie.asset('assets/animation/empty.json'));
+              } else {
+                return FutureBuilder(
+                    future: provider.getItems(),
+                    builder: (context, snap) {
+                      return ListView.builder(
+                          controller: scrollController,
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            final listValue = provider.todoList[index];
+                            DateTime date =
+                                DateTime.parse(listValue['createdAt']);
+                            String formatedDate =
+                                DateFormat().add_yMd().format(date);
+                            return Container(
+                              height: 70,
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 5),
+                              decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                        Colors.white.withAlpha(100),
+                                        Colors.grey
+                                      ]),
+                                  borderRadius: BorderRadius.circular(15)),
+                              child: Center(
+                                child: ListTile(
+                                  leading: IconButton(
                                       onPressed: () {},
-                                      icon: const Icon(
-                                        Icons.delete,
-                                        color: kwhite,
-                                      )),
+                                      icon: const Icon(Icons.check_box)),
+                                  title: Text(listValue['title']),
+                                  subtitle: Text(formatedDate),
+                                  trailing: Container(
+                                    height: 38,
+                                    width: 39,
+                                    decoration: BoxDecoration(
+                                        color: kred,
+                                        borderRadius: BorderRadius.circular(8)),
+                                    child: IconButton(
+                                        onPressed: () {
+                                          provider
+                                              .deleteValues(listValue['id']);
+                                        },
+                                        icon: const Icon(
+                                          Icons.delete,
+                                          color: kwhite,
+                                        )),
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
-                        },
-                        itemCount: provider.todoList.length);
-                  });
+                            );
+                          },
+                          itemCount: provider.todoList.length);
+                    });
+              }
             }),
           ),
           AddTodoWidget()
