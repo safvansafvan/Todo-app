@@ -38,4 +38,6 @@ class DbController extends ChangeNotifier {
     todoList = await db.query('items', orderBy: 'id');
     notifyListeners();
   }
+
+  Future<void> deleteValues() async {}
 }

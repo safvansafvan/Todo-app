@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:todo/controller/const/colors.dart';
 import 'package:todo/controller/provider/db_controller.dart';
@@ -33,12 +34,22 @@ class _HomeScreenState extends State<HomeScreen> {
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
                           final listValue = provider.todoList[index];
+                          DateTime date =
+                              DateTime.parse(listValue['createdAt']);
+                          String formatedDate =
+                              DateFormat().add_yMd().format(date);
                           return Container(
                             height: 70,
                             margin: const EdgeInsets.symmetric(
                                 horizontal: 15, vertical: 5),
                             decoration: BoxDecoration(
-                                color: kwhite,
+                                gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      Colors.white.withAlpha(100),
+                                      Colors.grey
+                                    ]),
                                 borderRadius: BorderRadius.circular(15)),
                             child: Center(
                               child: ListTile(
@@ -46,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     onPressed: () {},
                                     icon: const Icon(Icons.check_box)),
                                 title: Text(listValue['title']),
-                                subtitle: Text(listValue['createdAt']),
+                                subtitle: Text(formatedDate),
                                 trailing: Container(
                                   height: 38,
                                   width: 39,
