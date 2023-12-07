@@ -3,6 +3,7 @@ import 'package:sqflite/sqflite.dart' as sql;
 
 class DbController extends ChangeNotifier {
   List<Map<String, dynamic>> todoList = [];
+  List<Map<String, dynamic>> stillSearchTodo = [];
 
   Future<void> createTable(sql.Database database) async {
     await database.execute("""CREATE TABLE items (
@@ -45,5 +46,28 @@ class DbController extends ChangeNotifier {
     final db = await DbController().db();
     await db.delete('items', where: 'id = ?', whereArgs: [id]);
     notifyListeners();
+  }
+
+  TextEditingController search = TextEditingController();
+  Future<void> searchTodo(String query) async {
+    List<Map<String, dynamic>> result = [];
+    if (query.isEmpty) {
+      result = todoList;
+      notifyListeners();
+    } else {
+      result = todoList
+          .where((element) => element['title']
+              .toString()
+              .toLowerCase()
+              .trim()
+              .startsWith(query.toLowerCase().trim()))
+          .toList();
+    }
+    stillSearchTodo = result;
+    notifyListeners();
+  }
+
+  void clearSearch() {
+    search.clear();
   }
 }

@@ -6,6 +6,7 @@ import 'package:todo/controller/const/colors.dart';
 import 'package:todo/controller/provider/db_controller.dart';
 import 'package:todo/view/widgets/add_todo.dart';
 import 'package:todo/view/widgets/app_bar.dart';
+import 'package:todo/view/widgets/todo_list_tile.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,6 +17,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
+  void initState() {
+    Provider.of<DbController>(context, listen: false).getItems();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     ScrollController? scrollController;
     return Scaffold(
@@ -25,70 +32,35 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           const AppBarHome(),
           Expanded(
-            child: Consumer<DbController>(builder: (context, provider, _) {
-              if (provider.todoList.isEmpty) {
-                return Center(
-                    child: Lottie.asset('assets/animation/empty.json'));
-              } else {
-                return FutureBuilder(
-                    future: provider.getItems(),
-                    builder: (context, snap) {
-                      return ListView.builder(
-                          controller: scrollController,
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            final listValue = provider.todoList[index];
-                            DateTime date =
-                                DateTime.parse(listValue['createdAt']);
-                            String formatedDate =
-                                DateFormat().add_yMd().format(date);
-                            return Container(
-                              height: 70,
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 15, vertical: 5),
-                              decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                      colors: [
-                                        Colors.white.withAlpha(100),
-                                        Colors.grey
-                                      ]),
-                                  borderRadius: BorderRadius.circular(15)),
-                              child: Center(
-                                child: ListTile(
-                                  leading: IconButton(
-                                      onPressed: () {},
-                                      icon: const Icon(Icons.check_box)),
-                                  title: Text(listValue['title']),
-                                  subtitle: Text(formatedDate),
-                                  trailing: Container(
-                                    height: 38,
-                                    width: 39,
-                                    decoration: BoxDecoration(
-                                        color: kred,
-                                        borderRadius: BorderRadius.circular(8)),
-                                    child: IconButton(
-                                        onPressed: () {
-                                          provider
-                                              .deleteValues(listValue['id']);
-                                        },
-                                        icon: const Icon(
-                                          Icons.delete,
-                                          color: kwhite,
-                                        )),
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                          itemCount: provider.todoList.length);
-                    });
-              }
-            }),
+            child: Consumer<DbController>(
+              builder: (context, provider, _) {
+                provider.getItems();
+                if (provider.todoList.isEmpty) {
+                  return Center(
+                    child: Lottie.asset('assets/animation/empty.json'),
+                  );
+                } else {
+                  return ListView.builder(
+                    controller: scrollController,
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      final listValue = provider.todoList[index];
+                      DateTime date = DateTime.parse(listValue['createdAt']);
+                      String formatedDate = DateFormat().add_yMd().format(date);
+                      return Todo_tile_view(
+                        listValue: listValue,
+                        formatedDate: formatedDate,
+                        provider: provider,
+                      );
+                    },
+                    itemCount: provider.todoList.length,
+                  );
+                }
+              },
+            ),
           ),
-          AddTodoWidget()
+          AddTodoWidget(),
         ],
       ),
     );

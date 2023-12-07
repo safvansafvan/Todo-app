@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo/controller/const/colors.dart';
 import 'package:todo/controller/const/height.dart';
+import 'package:todo/view/search.dart';
 
 class AppBarHome extends StatelessWidget {
   const AppBarHome({super.key});
@@ -13,13 +14,14 @@ class AppBarHome extends StatelessWidget {
         children: [
           commonHeight,
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.menu, size: 35, color: kwhite)),
+                const CircleAvatar(
+                  radius: 25,
+                  child: Icon(Icons.menu_outlined, size: 30),
+                ),
                 Container(
                   margin:
                       const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
@@ -31,34 +33,19 @@ class AppBarHome extends StatelessWidget {
                         color: kwhite),
                   ),
                 ),
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 25,
-                  child: Icon(Icons.person_outline, size: 30),
-                )
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-            child: Container(
-              height: 55,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  color: kwhite, borderRadius: BorderRadius.circular(15)),
-              child: Center(
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Search...',
-                    prefixIcon: const Icon(Icons.search),
-                    suffixIcon: IconButton(
-                        onPressed: () {}, icon: const Icon(Icons.close)),
-                    focusedBorder: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                    border:
-                        const OutlineInputBorder(borderSide: BorderSide.none),
-                  ),
+                  child: IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const SearchView(),
+                            ));
+                      },
+                      icon: const Icon(Icons.search)),
                 ),
-              ),
+              ],
             ),
           ),
         ],
